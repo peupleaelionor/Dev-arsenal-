@@ -1,0 +1,55 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: devarsenal
+      POSTGRES_PASSWORD: devarsenal
+      POSTGRES_DB: devarsenal
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  web:
+    build:
+      context: ../..
+      dockerfile: infra/docker/Dockerfile
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgresql://devarsenal:devarsenal@postgres:5432/devarsenal
+    depends_on:
+      - postgres
+    env_file:
+      - ../../.env
+
+  dashboard:
+    build:
+      context: ../..
+      dockerfile: infra/docker/Dockerfile.dashboard
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    depends_on:
+      - postgres
+    env_file:
+      - ../../.env
+
+  admin:
+    build:
+      context: ../..
+      dockerfile: infra/docker/Dockerfile.admin
+    restart: unless-stopped
+    ports:
+      - "3002:3002"
+    depends_on:
+      - postgres
+    env_file:
+      - ../../.env
+
+volumes:
+  postgres_data:

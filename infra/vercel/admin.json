@@ -1,0 +1,8 @@
+{
+  "name": "devarsenal-admin",
+  "framework": "nextjs",
+  "buildCommand": "cd ../.. && pnpm build --filter=@devarsenal/admin",
+  "outputDirectory": "apps/admin/.next",
+  "installCommand": "pnpm install",
+  "regions": ["iad1"]
+}

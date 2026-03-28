@@ -1,0 +1,29 @@
+{
+  "name": "devarsenal",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "clean": "turbo run clean",
+    "format": "prettier --write \"**/*.{ts,tsx,md,json}\"",
+    "db:push": "turbo run db:push --filter=@devarsenal/db",
+    "db:migrate": "turbo run db:migrate --filter=@devarsenal/db",
+    "db:seed": "turbo run db:seed --filter=@devarsenal/db",
+    "db:studio": "turbo run db:studio --filter=@devarsenal/db"
+  },
+  "devDependencies": {
+    "turbo": "^2.3.3",
+    "prettier": "^3.4.2",
+    "prettier-plugin-tailwindcss": "^0.6.9",
+    "typescript": "^5.7.3"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "packageManager": "pnpm@9.15.4"
+}
