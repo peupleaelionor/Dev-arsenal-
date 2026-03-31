@@ -1,0 +1,63 @@
+# ============================================
+# NETLIFY CONFIGURATION - DevArsenal Web App
+# ============================================
+# This file configures the build and deployment
+# of the Next.js web application on Netlify.
+
+[build]
+  # Build command using pnpm + turbo for the web app
+  command = "npx pnpm@9.15.4 install --frozen-lockfile && npx pnpm@9.15.4 turbo run build --filter=@devarsenal/web..."
+  # Publish directory for the Next.js output
+  publish = "apps/web/.next"
+  # Ignore builds if no relevant files changed
+  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- apps/web/ packages/ui/"
+
+[build.environment]
+  # Node.js version
+  NODE_VERSION = "20"
+  # Enable corepack for pnpm support
+  COREPACK_ENABLE_STRICT = "0"
+  # Turbo telemetry opt-out
+  TURBO_TELEMETRY_DISABLED = "1"
+  # Next.js telemetry opt-out
+  NEXT_TELEMETRY_DISABLED = "1"
+
+# Netlify Next.js plugin for full Next.js support (SSR, ISR, middleware, etc.)
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# ---- Redirect: SPA fallback ----
+# The Next.js plugin handles routing automatically.
+# Add custom redirects below if needed.
+
+# Example: redirect /blog to an external blog
+# [[redirects]]
+#   from = "/blog"
+#   to = "https://blog.devarsenal.com"
+#   status = 301
+
+# ---- Headers ----
+# Security headers are also set in next.config.ts.
+# Netlify headers below act as an additional layer.
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
+
+# Cache static assets aggressively
+[[headers]]
+  for = "/_next/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Cache images
+[[headers]]
+  for = "/images/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400, s-maxage=604800"
