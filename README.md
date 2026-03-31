@@ -95,7 +95,7 @@ Billing:     Stripe (subscriptions, webhooks, portal)
 Email:       Resend
 Analytics:   PostHog
 Storage:     Vercel Blob
-Deployment:  Vercel
+Deployment:  Netlify / Vercel
 Package Mgr: pnpm workspaces
 Build:       Turborepo
 ```
@@ -233,7 +233,30 @@ The database models:
 
 ## Deploy
 
-### Vercel (Recommended)
+### Netlify (Recommended)
+
+The project includes a `netlify.toml` for one-click deployment of the web app.
+
+1. **Connect your repo** — Go to [app.netlify.com](https://app.netlify.com), click "Add new site" → "Import an existing project" → select your GitHub repository.
+2. **Environment variables** — In Site settings → Environment variables, add the variables from `.env.example` that your web app needs (at minimum, `NEXT_PUBLIC_APP_URL` and `NEXT_PUBLIC_DASHBOARD_URL`).
+3. **Deploy** — Netlify will auto-detect `netlify.toml` and build using the configured settings.
+
+The `netlify.toml` configures:
+- **Build**: `pnpm install` + `turbo build` scoped to `@devarsenal/web`
+- **Plugin**: `@netlify/plugin-nextjs` for full Next.js 15 support (SSR, ISR, middleware)
+- **Smart builds**: Only rebuilds when `apps/web/` or `packages/ui/` change
+- **Security headers**: HSTS, X-Frame-Options, CSP-related headers
+- **Caching**: Aggressive caching for static assets and images
+
+```bash
+# Or deploy via Netlify CLI
+npm i -g netlify-cli
+netlify login
+netlify init   # Link the repo
+netlify deploy --build --prod
+```
+
+### Vercel
 
 ```bash
 # Install Vercel CLI
